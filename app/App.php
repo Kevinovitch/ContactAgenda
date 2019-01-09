@@ -5,10 +5,10 @@ use App\Database;
 
 class App
 {
-    /** @var  */
-    private $db_instance;
-    /** @var  */
-    private static $_instance;
+    /** @var  $dbInstance */
+    private $dbInstance;
+    /** @var  $instance */
+    private static $instance;
 
     /**
      * Auto chargement des classes
@@ -26,10 +26,10 @@ class App
      */
     public static function getInstance()
     {
-        if (is_null(self::$_instance)) {
-            self::$_instance = new App();
+        if (is_null(self::$instance)) {
+            self::$instance = new App();
         }
-        return self::$_instance;
+        return self::$instance;
     }
 
     /**
@@ -43,16 +43,25 @@ class App
     }
 
     /**
+     * set de la Bdd
+     * @param $config
+     */
+    private function setDatabase($config)
+    {
+        $this->dbInstance = new Database($config->get('db_name'),
+            $config->get('db_user'), $config->get('db_pass'),
+            $config->get('db_host'));
+    }
+
+    /**
      * @return Database
      */
     public function getDatabase()
     {
-        $config = Config::getInstance();
-        if (is_null($this->db_instance)) {
-            $this->db_instance = new Database($config->get('db_name'),
-                $config->get('db_user'), $config->get('db_pass'),
-                $config->get('db_host'));
+        if (is_null($this->dbInstance)) {
+            $this->setDatabase(Config::getInstance());
         }
-        return $this->db_instance;
+
+        return $this->dbInstance;
     }
 }

@@ -4,8 +4,10 @@ namespace App;
 
 class Config
 {
+    /** @var array $settings  */
     private $settings = [];
-    private static $_instance;
+    /** @var  $instance */
+    private static $instance;
 
     /**
      * @param $file
@@ -13,10 +15,11 @@ class Config
      */
     public static function getInstance()
     {
-        if (is_null(self::$_instance)) {
-            self::$_instance = new Config();
+        if (is_null(self::$instance)) {
+            self::$instance = new Config();
         }
-        return self::$_instance;
+
+        return self::$instance;
     }
 
     /**
@@ -25,7 +28,6 @@ class Config
      */
     public function __construct()
     {
-        // todo trouver un moyen de sécuriser l'acces à la BDD
         $this->settings = [
             "db_user" => "newuser",
             "db_pass" => "password",

@@ -6,34 +6,45 @@ use \PDO;
 
 class Database
 {
-    /** @var string $db_name */
-    private $db_name;
-    /** @var string $db_user */
-    private $db_user;
-    /** @var string $db_pass */
-    private $db_pass;
-    /** @var string $db_host */
-    private $db_host;
+    /** @var string $dbName */
+    private $dbName;
+    /** @var string $dbUser */
+    private $dbUser;
+    /** @var string $dbPass */
+    private $dbPass;
+    /** @var string $dbHost */
+    private $dbHost;
     /** @var  $pdo */
     private $pdo;
 
     /**
      * Database constructor.
-     * @param $db_name
-     * @param string $db_user
-     * @param string $db_pass
-     * @param string $db_host
+     * @param $dbName
+     * @param string $dbUser
+     * @param string $dbPass
+     * @param string $dbHost
      */
     public function __construct(
-        $db_name,
-        $db_user = 'root',
-        $db_pass = 'root',
-        $db_host = 'localhost'
+        $dbName,
+        $dbUser = 'root',
+        $dbPass = 'root',
+        $dbHost = 'localhost'
     ) {
-        $this->db_name = $db_name;
-        $this->db_user = $db_user;
-        $this->db_pass = $db_pass;
-        $this->db_host = $db_host;
+        $this->dbName = $dbName;
+        $this->dbUser = $dbUser;
+        $this->dbPass = $dbPass;
+        $this->dbHost = $dbHost;
+    }
+
+    /**
+     * set de l'instance PDO
+     */
+    private function setPDO()
+    {
+        $pdo = new PDO('mysql:dbname=' . $this->dbName . ';host='
+            . $this->dbHost, $this->dbUser, $this->dbPass);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $this->pdo = $pdo;
     }
 
     /**
@@ -42,11 +53,9 @@ class Database
     private function getPDO()
     {
         if ($this->pdo === null) {
-            $pdo = new PDO('mysql:dbname=' . $this->db_name . ';host='
-                . $this->db_host, $this->db_user, $this->db_pass);
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->pdo = $pdo;
+            $this->setPDO();
         }
+
         return $this->pdo;
     }
 
