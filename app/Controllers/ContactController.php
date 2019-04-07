@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Controllers\ControllerInterface;
+use InvalidArgumentException;
+use Exception;
 
 class ContactController extends MainController implements ControllerInterface
 {
@@ -16,7 +18,6 @@ class ContactController extends MainController implements ControllerInterface
     {
         parent::__construct();
 
-        $this->loadModel('Contact');
         $this->userId = $_SESSION['auth']['id'];
     }
 
@@ -52,7 +53,6 @@ class ContactController extends MainController implements ControllerInterface
                 }
             } else {
                 $error = true;
-                $this->twig->render('add.html.twig', ['error' => $error]);
             }
         }
         echo $this->twig->render('add.html.twig', ['error' => $error]);
@@ -63,29 +63,7 @@ class ContactController extends MainController implements ControllerInterface
      */
     public function edit()
     {
-        $error = false;
-        $id = intval($_GET['id']);
-        if (!empty($_POST)) {
-            $response = $this->sanitize($_POST);
-
-            if ($response["response"]) {
-                $result = $this->Contact->update($id,
-                    [
-                        'nom'    => $response['nom'],
-                        'prenom' => $response['prenom'],
-                        'email'  => $response['email']
-                    ]);
-                if ($result) {
-                    return $this->index();
-                }
-            } else {
-                $error = true;
-                $this->twig->render('add.html.twig', ['error' => $error]);
-            }
-        }
-        $data = $this->Contact->findById($id);
-        echo $this->twig->render('add.html.twig',
-            ['data' => $data, 'error' => $error]);
+        //@todo
     }
 
     /**
@@ -100,17 +78,30 @@ class ContactController extends MainController implements ControllerInterface
     }
 
     /**
-     * Vérifie les contrainte d'enregistrement
-     *
      * @param array $data
-     *
      * @return array
+     * @throws Exception
+     * @throws InvalidArgumentException
      */
-    public function sanitize($data = [])
+    public function sanitize(array $data = []): array
     {
-        $nom    = ucfirst($_POST['nom']);
-        $prenom = ucfirst($_POST['prenom']);
-        $email  = strtolower($_POST['email']);
+        if (empty($nom)) {
+            throw new Exception('Le nom est obligatoire');
+        }
+
+        if (empty($prenom)) {
+            throw new Exception('Le prenom est obligatoire');
+        }
+
+        if (empty($email)) {
+            throw new Exception('Le email est obligatoire');
+        } elseif (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new InvalidArgumentException('Le format de l\'email est invalide');
+        }
+
+        $prenom = strtoupper($data['prenom']);
+        $nom    = strtoupper($data['nom']);
+        $email  = strtolower($data['email']);
 
         $isPalindrome = $this->apiClient('palindrome', ['name' => $nom]);
         $isEmail = $this->apiClient('email', ['email' => $email]);

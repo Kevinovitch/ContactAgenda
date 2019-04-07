@@ -14,6 +14,6 @@ class UserModel extends AbstractModel
      */
     public function login()
     {
-        return $this->query("SELECT * FROM $this->table WHERE login = '' AND password = md5()");
+        //@TODO
     }
 }

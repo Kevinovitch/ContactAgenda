@@ -24,7 +24,7 @@ class AddresseModel extends AbstractModel
      *
      * @return array|bool|mixed|\PDOStatement
      */
-    public function getByContact($idContact)
+    public function getByContact(int $idContact)
     {
         return $this->query("SELECT * FROM $this->table WHERE idContact = $idContact");
     }

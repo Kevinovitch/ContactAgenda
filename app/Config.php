@@ -10,7 +10,6 @@ class Config
     private static $instance;
 
     /**
-     * @param $file
      * @return Config
      */
     public static function getInstance()
@@ -24,7 +23,6 @@ class Config
 
     /**
      * Config constructor.
-     * @param $file
      */
     public function __construct()
     {

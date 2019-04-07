@@ -5,7 +5,7 @@ namespace App\Controllers;
 interface ControllerInterface
 {
     /**
-     * @Methode pour page d'accueil
+     * Methode pour page d'accueil
      */
     public function index();
 
@@ -27,7 +27,12 @@ interface ControllerInterface
     /**
      * @param array $data
      *
-     * @return mixed
+     * @return array
      */
-    public function sanitize($data = []);
+    public function sanitize(array $data = []): array;
+
+    /**
+     * Methode pour page de creation
+     */
+    public function create();
 }

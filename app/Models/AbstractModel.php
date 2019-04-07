@@ -40,8 +40,7 @@ abstract class AbstractModel
      */
     public function findById($id)
     {
-        return $this->query("SELECT * FROM {$this->model} WHERE id = ?", [$id],
-            true);
+        return $this->query("SELECT * FROM {$this->model} WHERE id = ?", [$id], true);
     }
 
     /**
@@ -90,23 +89,18 @@ abstract class AbstractModel
     /**
      * @param $id
      * @param $fields
-     * @return array|bool|false|mixed|\PDOStatement
      */
     public function update($id, $fields)
     {
-        $fields = $this->cleanInputs($fields);
-        $sqlParts = [];
-        $attributes = [];
-        foreach ($fields as $k => $v) {
-            $sqlParts[] = "$k = ?";
-            $attributes[] = $v;
-        }
-        $attributes[] = $id;
-        $sqlPart = implode(', ', $sqlParts);
-        return $this->query("UPDATE {$this->table} SET $sqlPart WHERE id = ?",
-            $attributes, true);
+        //@todo
     }
 
+    /**
+     * Supprime un enregistrement
+     *
+     * @param $id
+     * @return array|bool|false|mixed|\PDOStatement
+     */
     public function delete($id)
     {
         return $this->query("DELETE FROM {$this->table} WHERE id = ?", [$id],
@@ -114,7 +108,6 @@ abstract class AbstractModel
     }
 
     /**
-     * Nétoyer les données postées
      *
      * @param $data
      *

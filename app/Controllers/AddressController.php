@@ -97,7 +97,7 @@ class AddressController extends MainController implements ControllerInterface
                     ]);
                 if ($result) {
                     header("Location: /index.php?p=address.index&id=$addresse->idContact");
-                }else {
+                } else {
                     $error = true;
                     $this->twig->render('addressadd.html.twig',
                         ["idContact" => $id,'error' => $error]);
@@ -111,6 +111,7 @@ class AddressController extends MainController implements ControllerInterface
 
             }
         }
+
         $data = $this->Addresse->findById($id);
         echo $this->twig->render('addressadd.html.twig',
             [
@@ -120,18 +121,11 @@ class AddressController extends MainController implements ControllerInterface
     }
 
     /**
-     * Supression d'une adresse d'un contact
+     * Suppression d'une adresse d'un contact
      */
     public function delete()
     {
-        $id = intval($_GET['id']);
-        $addresse = $this->Addresse->findById($id);
-        if ($addresse) {
-            $result = $this->Addresse->delete($id);
-            if ($result) {
-                header("Location: /index.php?p=address.index&id=$addresse->idContact");
-            }
-        }
+       //@todo
     }
 
 
@@ -147,7 +141,6 @@ class AddressController extends MainController implements ControllerInterface
         $number     = $_POST['number'];
         $city       = strtoupper($_POST['city']);
         $country    = strtoupper($_POST['country']);
-        $postalCode = $_POST['postalCode'];
         $street     = strtoupper($_POST['street']);
         $idContact  = intval($_POST['idContact']);
 
@@ -159,7 +152,7 @@ class AddressController extends MainController implements ControllerInterface
                 'number'     => $_POST['number'],
                 'city'       => strtoupper($_POST['city']),
                 'country'    => strtoupper($_POST['country']),
-                'postalCode' => $_POST['postalCode'],
+                'postalCode' => $postalCode,
                 'street'     => strtoupper($_POST['street']),
                 'idContact'  => $_POST['idContact']
             ];

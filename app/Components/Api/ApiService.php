@@ -26,7 +26,7 @@ class ApiService
      */
     public function processApi()
     {
-        $func = strtolower(trim(str_replace("/", "", $request['rquest'])));
+        $func = strtolower(trim(str_replace("/", "", $this->request['request'])));
         if ((int)method_exists($this, $func) > 0) {
             $this->$func();
         } else {
@@ -49,7 +49,7 @@ class ApiService
             500 => 'Internal Server Error'
         ];
 
-        return ($status[$this->_code]) ? $status[$this->_code] : $status[500];
+        return ($status[$this->code]) ? $status[$this->code] : $status[500];
     }
 
     /**
@@ -69,15 +69,15 @@ class ApiService
     {
         switch ($this->getRequestMethod()) {
             case "POST":
-                $this->_request = $this->cleanInputs($_POST);
+                $this->request = $this->cleanInputs($_POST);
                 break;
             case "GET":
             case "DELETE":
-                $this->_request = $this->cleanInputs($_GET);
+                $this->request = $this->cleanInputs($_GET);
                 break;
             case "PUT":
-                parse_str(file_get_contents("php://input"), $this->_request);
-                $this->_request = $this->cleanInputs($this->_request);
+                parse_str(file_get_contents("php://input"), $this->request);
+                $this->request = $this->cleanInputs($this->request);
                 break;
             default:
                 $this->response('', 406);
@@ -92,7 +92,7 @@ class ApiService
      */
     public function response($data, $status)
     {
-        $this->_code = ($status) ? $status : 200;
+        $this->code = ($status) ? $status : 200;
         $this->setHeader();
         echo $data;
         exit;
@@ -103,7 +103,7 @@ class ApiService
      */
     private function setHeader()
     {
-        header("HTTP/1.1 " . $this->_code . " " . $this->getStatusMessage());
+        header("HTTP/1.1 " . $this->code . " " . $this->getStatusMessage());
         header("Content-Type:" . $this->_content_type);
     }
 
@@ -113,18 +113,18 @@ class ApiService
      */
     private function cleanInputs($data)
     {
-        $clean_input = array();
+        $cleanInput = array();
         if (is_array($data)) {
             foreach ($data as $k => $v) {
-                $clean_input[$k] = $this->cleanInputs($v);
+                $cleanInput[$k] = $this->cleanInputs($v);
             }
         } else {
             if (get_magic_quotes_gpc()) {
                 $data = trim(stripslashes($data));
             }
             $data = strip_tags($data);
-            $clean_input = trim($data);
+            $cleanInput = trim($data);
         }
-        return $clean_input;
+        return $cleanInput;
     }
 }
